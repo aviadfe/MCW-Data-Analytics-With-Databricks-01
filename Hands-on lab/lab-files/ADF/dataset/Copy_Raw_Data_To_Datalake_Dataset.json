@@ -1,0 +1,23 @@
+{
+	"name": "Copy_Raw_Data_To_Datalake_Dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Copy_Raw_Data_To_Datalake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "Triage",
+				"container": "sparkcontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
