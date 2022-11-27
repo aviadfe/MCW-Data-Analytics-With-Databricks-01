@@ -8,8 +8,29 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"Copy_Raw_Data_From_OnPremServer_password": {
+			"value": ""
+		},
+		"Copy_Raw_Data_To_Datalake_connectionString": {
+			"value": ""
+		},
+		"FileShare2_password": {
+			"value": ""
+		},
 		"fileShare_password": {
 			"value": ""
+		},
+		"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_host": {
+			"value": "\\\\sflightsandweatherfiles.file.core.windows.net\\flightsandweather"
+		},
+		"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId": {
+			"value": "sflightsandweatherfiles"
+		},
+		"FileShare2_properties_typeProperties_host": {
+			"value": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-monthly"
+		},
+		"FileShare2_properties_typeProperties_userId": {
+			"value": "asastoremcwaf1"
 		},
 		"fileShare_properties_typeProperties_host": {
 			"value": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-analytics"

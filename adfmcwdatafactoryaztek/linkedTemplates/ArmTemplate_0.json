@@ -11,9 +11,37 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"Copy_Raw_Data_From_OnPremServer_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Copy_Raw_Data_From_OnPremServer'"
+		},
+		"Copy_Raw_Data_To_Datalake_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Copy_Raw_Data_To_Datalake'"
+		},
+		"FileShare2_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileShare2'"
+		},
 		"fileShare_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileShare'"
+		},
+		"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\sflightsandweatherfiles.file.core.windows.net\\flightsandweather"
+		},
+		"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "sflightsandweatherfiles"
+		},
+		"FileShare2_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-monthly"
+		},
+		"FileShare2_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "asastoremcwaf1"
 		},
 		"fileShare_properties_typeProperties_host": {
 			"type": "string",
@@ -42,6 +70,55 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Raw_Data_From_OnPremServer')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('Copy_Raw_Data_From_OnPremServer_properties_typeProperties_host')]",
+					"userId": "[parameters('Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Copy_Raw_Data_From_OnPremServer_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Raw_Data_To_Datalake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('Copy_Raw_Data_To_Datalake_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileShare2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileShare2_properties_typeProperties_host')]",
+					"userId": "[parameters('FileShare2_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileShare2_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/fileShare')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -58,6 +135,81 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Raw_Data_From_OnPremServer_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Copy_Raw_Data_From_OnPremServer",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "AIRPORT_ID",
+						"type": "String"
+					},
+					{
+						"name": "AIRPORT",
+						"type": "String"
+					},
+					{
+						"name": "DISPLAY_AIRPORT_NAME",
+						"type": "String"
+					},
+					{
+						"name": "LATITUDE",
+						"type": "String"
+					},
+					{
+						"name": "LONGITUDE",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Copy_Raw_Data_From_OnPremServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Raw_Data_To_Datalake_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Copy_Raw_Data_To_Datalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "Triage",
+						"container": "sparkcontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Copy_Raw_Data_To_Datalake')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
@@ -111,6 +263,88 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_RawData_Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_RawData_From_OnPrem_To_DL",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "/"
+							},
+							{
+								"name": "Destination",
+								"value": "sparkcontainer/Triage/"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings",
+									"skipLineCount": 0
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Copy_Raw_Data_From_OnPremServer_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Copy_Raw_Data_To_Datalake_Dataset",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Copy_Raw_Data_From_OnPremServer_Dataset')]",
+				"[concat(variables('factoryId'), '/datasets/Copy_Raw_Data_To_Datalake_Dataset')]"
 			]
 		},
 		{
