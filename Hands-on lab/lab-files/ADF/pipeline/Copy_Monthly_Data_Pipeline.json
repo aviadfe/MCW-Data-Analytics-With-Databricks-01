@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_5kc",
+				"name": "Copy_MonthlyData_From_OnPrem_To_DL",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
