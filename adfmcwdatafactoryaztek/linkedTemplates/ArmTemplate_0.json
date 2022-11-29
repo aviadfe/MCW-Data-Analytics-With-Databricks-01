@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"Copy_Monthly_Data_From_OnPremServer_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Copy_Monthly_Data_From_OnPremServer'"
+		},
 		"Copy_Raw_Data_From_OnPremServer_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Copy_Raw_Data_From_OnPremServer'"
@@ -19,13 +23,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Copy_Raw_Data_To_Datalake'"
 		},
-		"FileShare2_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'FileShare2'"
-		},
 		"fileShare_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileShare'"
+		},
+		"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\sflightsandweatherfiles.file.core.windows.net\\flightsandweather-monthly"
+		},
+		"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "sflightsandweatherfiles"
 		},
 		"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_host": {
 			"type": "string",
@@ -35,14 +43,6 @@
 			"type": "string",
 			"defaultValue": "sflightsandweatherfiles"
 		},
-		"FileShare2_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-monthly"
-		},
-		"FileShare2_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "asastoremcwaf1"
-		},
 		"fileShare_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-analytics"
@@ -50,6 +50,10 @@
 		"fileShare_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "asastoremcwaf1"
+		},
+		"Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart": {
+			"type": "string",
+			"defaultValue": "@trigger().scheduledTime"
 		}
 	},
 	"variables": {
@@ -65,6 +69,24 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Monthly_Data_From_OnPremServer')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host')]",
+					"userId": "[parameters('Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('Copy_Monthly_Data_From_OnPremServer_password')]"
+					}
 				}
 			},
 			"dependsOn": []
@@ -96,24 +118,6 @@
 				"type": "AzureBlobStorage",
 				"typeProperties": {
 					"connectionString": "[parameters('Copy_Raw_Data_To_Datalake_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/FileShare2')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('FileShare2_properties_typeProperties_host')]",
-					"userId": "[parameters('FileShare2_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('FileShare2_password')]"
-					}
 				}
 			},
 			"dependsOn": []
@@ -263,6 +267,206 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_5kc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Copy_Raw_Data_To_Datalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"cw_folderPath": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@dataset().cw_folderPath",
+							"type": "Expression"
+						},
+						"container": "sparkcontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Copy_Raw_Data_To_Datalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_5kc')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Copy_Monthly_Data_From_OnPremServer",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"folderPath": "FlightsAndWeather"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "OriginAirportCode",
+						"type": "String"
+					},
+					{
+						"name": "Month",
+						"type": "String"
+					},
+					{
+						"name": "DayofMonth",
+						"type": "String"
+					},
+					{
+						"name": "CRSDepHour",
+						"type": "String"
+					},
+					{
+						"name": "DayOfWeek",
+						"type": "String"
+					},
+					{
+						"name": "Carrier",
+						"type": "String"
+					},
+					{
+						"name": "DestAirportCode",
+						"type": "String"
+					},
+					{
+						"name": "DepDel15",
+						"type": "String"
+					},
+					{
+						"name": "WindSpeed",
+						"type": "String"
+					},
+					{
+						"name": "SeaLevelPressure",
+						"type": "String"
+					},
+					{
+						"name": "HourlyPrecip",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Copy_Monthly_Data_From_OnPremServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Monthly_Data_Pipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_MonthlyData_From_OnPrem_To_DL",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "FlightsAndWeather/"
+							},
+							{
+								"name": "Destination",
+								"value": "sparkcontainer/Triage/FlightsAndWeather/@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}/"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings",
+									"skipLineCount": 0
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings",
+									"copyBehavior": "MergeFiles"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"parallelCopies": 10,
+							"enableSkipIncompatibleRow": true,
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_5kc",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_5kc",
+								"type": "DatasetReference",
+								"parameters": {
+									"cw_folderPath": "Triage/FlightsAndWeather/@{formatDateTime(pipeline().parameters.windowStart,'yyyy')}/@{formatDateTime(pipeline().parameters.windowStart,'MM')}"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"windowStart": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_5kc')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_5kc')]"
 			]
 		},
 		{
@@ -425,6 +629,52 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]",
 				"[concat(variables('factoryId'), '/datasets/DelimitedTextToBlob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Trigger_5kc')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "Copy_Monthly_Data_Pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"windowStart": {
+								"type": "Expression",
+								"value": "[parameters('Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart')]"
+							}
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Month",
+						"interval": 1,
+						"startTime": "2022-01-01T00:00:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								0
+							],
+							"hours": [
+								0
+							],
+							"monthDays": [
+								1
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Copy_Monthly_Data_Pipeline')]"
 			]
 		}
 	]

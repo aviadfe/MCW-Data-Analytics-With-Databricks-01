@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"Copy_Monthly_Data_From_OnPremServer_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Copy_Monthly_Data_From_OnPremServer'"
+		},
 		"Copy_Raw_Data_From_OnPremServer_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Copy_Raw_Data_From_OnPremServer'"
@@ -19,13 +23,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Copy_Raw_Data_To_Datalake'"
 		},
-		"FileShare2_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'FileShare2'"
-		},
 		"fileShare_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'fileShare'"
+		},
+		"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\sflightsandweatherfiles.file.core.windows.net\\flightsandweather-monthly"
+		},
+		"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "sflightsandweatherfiles"
 		},
 		"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_host": {
 			"type": "string",
@@ -35,14 +43,6 @@
 			"type": "string",
 			"defaultValue": "sflightsandweatherfiles"
 		},
-		"FileShare2_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-monthly"
-		},
-		"FileShare2_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "asastoremcwaf1"
-		},
 		"fileShare_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-analytics"
@@ -50,6 +50,10 @@
 		"fileShare_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "asastoremcwaf1"
+		},
+		"Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart": {
+			"type": "string",
+			"defaultValue": "@trigger().scheduledTime"
 		},
 		"containerUri": {
 			"type": "string",
@@ -81,17 +85,23 @@
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
+					"Copy_Monthly_Data_From_OnPremServer_password": {
+						"value": "[parameters('Copy_Monthly_Data_From_OnPremServer_password')]"
+					},
 					"Copy_Raw_Data_From_OnPremServer_password": {
 						"value": "[parameters('Copy_Raw_Data_From_OnPremServer_password')]"
 					},
 					"Copy_Raw_Data_To_Datalake_connectionString": {
 						"value": "[parameters('Copy_Raw_Data_To_Datalake_connectionString')]"
 					},
-					"FileShare2_password": {
-						"value": "[parameters('FileShare2_password')]"
-					},
 					"fileShare_password": {
 						"value": "[parameters('fileShare_password')]"
+					},
+					"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host": {
+						"value": "[parameters('Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host')]"
+					},
+					"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_userId": {
+						"value": "[parameters('Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_userId')]"
 					},
 					"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_host": {
 						"value": "[parameters('Copy_Raw_Data_From_OnPremServer_properties_typeProperties_host')]"
@@ -99,17 +109,14 @@
 					"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId": {
 						"value": "[parameters('Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId')]"
 					},
-					"FileShare2_properties_typeProperties_host": {
-						"value": "[parameters('FileShare2_properties_typeProperties_host')]"
-					},
-					"FileShare2_properties_typeProperties_userId": {
-						"value": "[parameters('FileShare2_properties_typeProperties_userId')]"
-					},
 					"fileShare_properties_typeProperties_host": {
 						"value": "[parameters('fileShare_properties_typeProperties_host')]"
 					},
 					"fileShare_properties_typeProperties_userId": {
 						"value": "[parameters('fileShare_properties_typeProperties_userId')]"
+					},
+					"Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart": {
+						"value": "[parameters('Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart')]"
 					}
 				}
 			},
