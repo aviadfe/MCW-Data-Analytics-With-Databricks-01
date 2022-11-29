@@ -110,7 +110,7 @@
 								"formatSettings": {
 									"type": "DelimitedTextWriteSettings",
 									"quoteAllText": true,
-									"fileExtension": ""
+									"fileExtension": ".csv"
 								}
 							},
 							"enableStaging": false,
@@ -462,6 +462,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
+						"fileName": "FlightsAndWeather.csv",
 						"folderPath": {
 							"value": "@dataset().cw_folderPath",
 							"type": "Expression"
