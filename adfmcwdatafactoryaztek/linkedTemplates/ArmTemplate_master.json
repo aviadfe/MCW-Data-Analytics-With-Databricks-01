@@ -23,10 +23,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Copy_Raw_Data_To_Datalake'"
 		},
-		"fileShare_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'fileShare'"
-		},
 		"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\sflightsandweatherfiles.file.core.windows.net\\flightsandweather-monthly"
@@ -42,14 +38,6 @@
 		"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId": {
 			"type": "string",
 			"defaultValue": "sflightsandweatherfiles"
-		},
-		"fileShare_properties_typeProperties_host": {
-			"type": "string",
-			"defaultValue": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-analytics"
-		},
-		"fileShare_properties_typeProperties_userId": {
-			"type": "string",
-			"defaultValue": "asastoremcwaf1"
 		},
 		"Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart": {
 			"type": "string",
@@ -94,9 +82,6 @@
 					"Copy_Raw_Data_To_Datalake_connectionString": {
 						"value": "[parameters('Copy_Raw_Data_To_Datalake_connectionString')]"
 					},
-					"fileShare_password": {
-						"value": "[parameters('fileShare_password')]"
-					},
 					"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host": {
 						"value": "[parameters('Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host')]"
 					},
@@ -108,12 +93,6 @@
 					},
 					"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId": {
 						"value": "[parameters('Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId')]"
-					},
-					"fileShare_properties_typeProperties_host": {
-						"value": "[parameters('fileShare_properties_typeProperties_host')]"
-					},
-					"fileShare_properties_typeProperties_userId": {
-						"value": "[parameters('fileShare_properties_typeProperties_userId')]"
 					},
 					"Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart": {
 						"value": "[parameters('Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart')]"

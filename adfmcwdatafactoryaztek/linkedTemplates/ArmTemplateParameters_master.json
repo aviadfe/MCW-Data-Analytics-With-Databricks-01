@@ -17,9 +17,6 @@
 		"Copy_Raw_Data_To_Datalake_connectionString": {
 			"value": ""
 		},
-		"fileShare_password": {
-			"value": ""
-		},
 		"Copy_Monthly_Data_From_OnPremServer_properties_typeProperties_host": {
 			"value": "\\\\sflightsandweatherfiles.file.core.windows.net\\flightsandweather-monthly"
 		},
@@ -31,12 +28,6 @@
 		},
 		"Copy_Raw_Data_From_OnPremServer_properties_typeProperties_userId": {
 			"value": "sflightsandweatherfiles"
-		},
-		"fileShare_properties_typeProperties_host": {
-			"value": "\\\\asastoremcwaf1.file.core.windows.net\\mtc-analytics"
-		},
-		"fileShare_properties_typeProperties_userId": {
-			"value": "asastoremcwaf1"
 		},
 		"Trigger_5kc_properties_Copy_Monthly_Data_Pipeline_parameters_windowStart": {
 			"value": "@trigger().scheduledTime"
