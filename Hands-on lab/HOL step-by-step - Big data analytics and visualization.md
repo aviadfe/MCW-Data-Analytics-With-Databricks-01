@@ -34,6 +34,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Exercise 1: Retrieve lab environment information and create Databricks cluster](#exercise-1-retrieve-lab-environment-information-and-create-databricks-cluster)
     - [Task 1: Retrieve Azure Storage account information and Subscription Id](#task-1-retrieve-azure-storage-account-information-and-subscription-id)
     - [Task 2: Create an Azure Databricks cluster](#task-2-create-an-azure-databricks-cluster)
+    - [Task 3: Configure the Databricks Workspace and connect it to the Azure Storage Account](#task-3-configure-the-databricks-workspace-and-connect-it-to-the-azure-storage-account)
   - [Exercise 2: Load Sample Data and Databricks Notebooks](#exercise-2-load-sample-data-and-databricks-notebooks)
     - [Task 1: Upload the Sample Datasets](#task-1-upload-the-sample-datasets)
     - [Task 2: Open Azure Databricks and complete lab notebooks](#task-2-open-azure-databricks-and-complete-lab-notebooks)
@@ -164,6 +165,35 @@ You have provisioned an Azure Databricks workspace, and now you need to create a
    ![The New Cluster form is populated with the values as outlined above.](media/azure-databricks-create-cluster-form.png 'Create Cluster')
 
 6. Select **Create Cluster**.
+
+### Task 3: Configure the Databricks Workspace and connect it to the Azure Storage Account
+
+1. Within Azure Databricks, select **Data Science & Engineering** .
+   ![The Machine Learning view is selected.](media/databricks-machine-learning.png 'Machine Learning')
+
+2. Within Azure Databricks, select **Workspace (1)** on the menu, then **Users (2)**, then select the down arrow next to your username **(3)**. Select **Import (4)**.
+
+   ![In the left menu, the Workspace item is selected. Beneath the Workspaces pane, the Users item is selected. Beneath the Users pane, the current user is selected. The menu carat next to the username of the user is expanded with the Import item selected.](media/select-import-in-user-workspace.png 'Import')
+
+3. Within the Import Notebooks dialog, select Import from: **URL (1)**, then paste the following into the URL textbox **(2)**: https://github.com/microsoft/MTC_IL_WORKSHOP_Big_data_analytics_and_visualization/tree/main/DATA_ENG_IN_AZURE/Hands-on%20lab/lab-files/BigDataVis.dbc?raw=true . Select **Import (3)** to continue.
+
+   ![The Import Notebooks dialog is shown that will allow the user to import notebooks via a file upload or URL.](media/import-notebooks.png 'Import from file')
+
+   > **Note:**  This Databricks archive is available within the `\DATA_ENG_IN_AZURE\Hands-on lab\lab-files` directory of this repository.  In the `BigDataVis` subfolder, you can also see the individual notebooks as separate files in .ipynb format.
+
+4. After importing, expand the new **BigDataVis** folder.
+
+   ![Workspace is open. The current user is selected. BigDataVis folder is highlighted.](media/adf-selecting-bigdatavis.png 'BigDataVis')
+
+   > **WARNING:** When you open a notebook, make sure you attach your cluster to the notebook using the **Connect** dropdown. You will need to do this for each notebook you open.
+   >
+   >![In the taskbar for a notebook, the cluster that is currently attached is highlighted.](media/attach-cluster-to-notebook.png 'Attach cluster to notebook')
+
+5. Run each cell of the notebook located in the **Exercise 1** folder (03 - Connect Data Lake to Databricks) individually by selecting within the cell, then entering **Ctrl+Enter** on your keyboard.
+
+   ![In the Workspace screen, beneath BigDataVis the Exercise 2 folder is selected. Beneath Exercise 2, three notebooks are displayed 01 Data Preparation, 02 Train and Evaluate Models, and 03 Deploy as Web Service.](media/azure-databricks-exercise-2.png 'Exercise 2 folder')
+
+
 
 ## Exercise 2: Load Sample Data and Databricks Notebooks
 
