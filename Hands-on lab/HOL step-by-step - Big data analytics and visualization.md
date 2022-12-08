@@ -168,8 +168,9 @@ You have provisioned an Azure Databricks workspace, and now you need to create a
 
 ### Task 3: Configure the Databricks Workspace and connect it to the Azure Storage Account
 
-1. Within Azure Databricks, select **Data Science & Engineering** .
-   ![The Machine Learning view is selected.](media/databricks-machine-learning.png 'Machine Learning')
+1. Within Azure Databricks, select **Data Science & Engineering**.
+
+   ![The Data Science & Engineering view is selected.](media/databricks-machine-learning.png 'Machine Learning')
 
 2. Within Azure Databricks, select **Workspace (1)** on the menu, then **Users (2)**, then select the down arrow next to your username **(3)**. Select **Import (4)**.
 
